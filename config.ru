@@ -18,18 +18,28 @@ class TravisWebhook < Sinatra::Base
     if not valid_request?
       puts "Invalid payload request for repository #{repo_slug}"
     else
-      puts "Payload is", params[:payload]
       payload = JSON.parse(params[:payload])
       puts "Received valid payload"
       if payload['status'].nil? or (payload['status'] == 0)
-        repo = ENV['ORIGIN_REPO']
-        dest_branch = ENV['DEST_BRANCH']
+        branch = payload['branch']
+        filter = ENV['BRANCH_FILTER']
+        if not filter or branch.match(filter)
+          repo = ENV['ORIGIN_REPO']
+          dest_branch = ENV['DEST_BRANCH']
 
-        puts "Merging changes into #{repo}/#{dest_branch}"
-        passed_commit = payload['commit']
-        client = Octokit::Client::new(:access_token => ENV["GITHUB_TOKEN"])
-        client.merge(repo, dest_branch, passed_commit, {
-                       :commit_message => "Auto-merging #{passed_commit}\n\nTravis: #{payload['status_message']} at #{payload['finished_at']}\n#{payload['build_url']}"})
+          puts "Merging changes into #{repo}/#{dest_branch}"
+          passed_commit = payload['commit']
+          msg = <<END
+Auto-merging #{passed_commit}
+
+Travis: #{payload['status_message']} at #{payload['finished_at']}
+#{payload['build_url']}
+END
+
+          client = Octokit::Client::new(:access_token => ENV["GITHUB_TOKEN"])
+          client.merge(repo, dest_branch, passed_commit, {
+                         :commit_message => msg})
+        end
       else
         puts "Ohh, it seems build #{payload['status_message']}"
       end

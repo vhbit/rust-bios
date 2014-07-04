@@ -12,3 +12,4 @@ a specific branch.
 6. Set the DEST_BRANCH environment variable
 7. Create Github [personal access token](https://github.com/settings/tokens/new)
 8. Set the GITHUB_TOKEN environment variable
+9. Set the BRANCH_FILTER environment variable (regexp)
