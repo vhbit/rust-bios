@@ -1,16 +1,14 @@
-An example webhook application using Sinatra to accept and process webhooks from Travis CI.
+Extremely simple merging bot, which processes webhook notifications
+from Travis and automatically merges commits which passed build into
+a specific branch.
 
 #### Run it on Heroku
 
 1. Clone the repository
 2. Create a Heroku app
 3. Fetch your Travis CI user token from the profile page
-3. Set the TRAVIS_USER_TOKEN environment variable on the Heroku app
-
-Or, in direct commands:
-
-1. git clone git://github.com/travis-ci/webhook-example.git
-2. cd webhook-example
-3. heroku create
-4. heroku config:set TRAVIS_USER_TOKEN=<token>
-5. git push heroku
+4. Set the TRAVIS_USER_TOKEN environment variable
+5. Set the ORIGIN_REPO environment variable
+6. Set DEST_BRANCH environment variable
+7. Create Github [personal access token](https://github.com/settings/tokens/new)
+8. Set GITHUB_TOKEN environment variable
