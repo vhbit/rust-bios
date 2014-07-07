@@ -28,7 +28,12 @@ class TravisWebhook < Sinatra::Base
           dest_branch = ENV['DEST_BRANCH']
 
           puts "Merging changes into #{repo}/#{dest_branch}"
-          passed_commit = payload['commit']
+          if filter
+            passed_commit = branch.match(filter)[1]
+          else    
+            passed_commit = payload['commit']          
+          end
+
           msg = <<END
 Auto-merging #{passed_commit}
 
