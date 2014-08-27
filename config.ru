@@ -23,6 +23,7 @@ class TravisWebhook < Sinatra::Base
       if payload['status'].nil? or (payload['status'] == 0)
         branch = payload['branch']
         filter = ENV['BRANCH_FILTER']
+        puts "Branch #{branch}, filter #{filter}"
         if not filter or branch.match(filter)
           repo = ENV['ORIGIN_REPO']
           dest_branch = ENV['DEST_BRANCH']
